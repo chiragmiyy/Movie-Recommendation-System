@@ -72,7 +72,7 @@ def recommend(movie):
 st.set_page_config(page_title="🎬 Movie Recommender", layout="wide")
 
 st.markdown("<h1 style='text-align: center;'>🎥 Movie Recommender System</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;'>Choose a movie and get 5 similar recommendations based on ML.</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>Choose a movie and get 10 similar recommendations based on ML.</p>", unsafe_allow_html=True)
 st.markdown("---")
 
 selected_movie = st.selectbox("🎬 Select a movie you like:", movies_df['title'].values)
@@ -81,8 +81,8 @@ if st.button("🔍 Show Recommendations"):
     with st.spinner("Fetching recommendations and posters..."):
         names, posters = recommend(selected_movie)
 
-    st.markdown("### ⭐ Top 5 Recommendations")
-    cols = st.columns(5)
+    st.markdown("### ⭐ Top 10 Recommendations")
+    cols = st.columns(10)
 
     for idx, col in enumerate(cols):
         with col:
