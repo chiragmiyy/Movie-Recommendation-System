@@ -5,7 +5,6 @@ import pickle
 import requests
 import time
 
-# --- Download pickle files from Google Drive if they don't exist ---
 movies_url = "https://drive.google.com/uc?id=1ZS5grgUSeobuI9E9MQPt3r5RHu86PCqR"
 similarity_url = "https://drive.google.com/uc?id=1FfqvMfdufSxWrSvh5EPWrZOKNoo2-cM5"
 
@@ -15,14 +14,12 @@ if not os.path.exists('movies.pkl'):
 if not os.path.exists('similarity.pkl'):
     gdown.download(similarity_url, 'similarity.pkl', quiet=False)
 
-# --- Load the data ---
 with open('movies.pkl', 'rb') as f:
     movies_df = pickle.load(f)
 
 with open('similarity.pkl', 'rb') as f:
     similarity = pickle.load(f)
 
-# TMDB API Key
 API_KEY = "7f740fc310ed76697e23b3b545588c7a"
 poster_cache = {}
 
@@ -57,7 +54,7 @@ def fetch_poster(movie_id):
 def recommend(movie):
     movie_index = movies_df[movies_df['title'] == movie].index[0]
     distances = similarity[movie_index]
-    movie_indices = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:6]
+    movie_indices = sorted(list(enumerate(distances)), reverse=True, key=lambda x: x[1])[1:11]
 
     recommended_movies = []
     recommended_posters = []
@@ -72,7 +69,6 @@ def recommend(movie):
 
     return recommended_movies, recommended_posters
 
-# --- UI Layout ---
 st.set_page_config(page_title="🎬 Movie Recommender", layout="wide")
 
 st.markdown("<h1 style='text-align: center;'>🎥 Movie Recommender System</h1>", unsafe_allow_html=True)
@@ -90,7 +86,7 @@ if st.button("🔍 Show Recommendations"):
 
     for idx, col in enumerate(cols):
         with col:
-            st.image(posters[idx], use_column_width=True)
+            st.image(posters[idx], use_container_width=True)
             st.caption(f"🎞️ {names[idx]}")
 else:
     st.info("👆 Choose a movie and click **Show Recommendations** to get started.")
