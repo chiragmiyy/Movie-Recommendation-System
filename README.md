@@ -65,7 +65,6 @@ Open movie_recommender.ipynb and run the cells step-by-step.
 
 ## 📂 Folder Structure
 
-```markdown
 ```plaintext
 movie-recommendation-system/
 ├── tmdb_5000_movies.csv
