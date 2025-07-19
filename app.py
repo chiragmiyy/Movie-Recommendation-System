@@ -71,7 +71,7 @@ def recommend(movie):
 
 st.set_page_config(page_title="🎬 Movie Recommender", layout="wide")
 
-st.markdown("<h1 style='text-align: center;'>🎥 Movie Recommender System</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>🎥 What's Next on Netflix</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center;'>Choose a movie and get 10 similar recommendations based on ML.</p>", unsafe_allow_html=True)
 st.markdown("---")
 
