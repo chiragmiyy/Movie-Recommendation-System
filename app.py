@@ -1,15 +1,28 @@
 import streamlit as st
+import gdown
+import os
 import pickle
 import requests
 import time
 
-# Page settings
-st.set_page_config(page_title="🎬 Movie Recommender", layout="wide")
+# --- Download pickle files from Google Drive if they don't exist ---
+movies_url = "https://drive.google.com/uc?id=1ZS5grgUSeobuI9E9MQPt3r5RHu86PCqR"
+similarity_url = "https://drive.google.com/uc?id=1FfqvMfdufSxWrSvh5EPWrZOKNoo2-cM5"
 
-# Load data
-movies_df = pickle.load(open('movies.pkl', 'rb'))
-similarity = pickle.load(open('similarity.pkl', 'rb'))
+if not os.path.exists('movies.pkl'):
+    gdown.download(movies_url, 'movies.pkl', quiet=False)
 
+if not os.path.exists('similarity.pkl'):
+    gdown.download(similarity_url, 'similarity.pkl', quiet=False)
+
+# --- Load the data ---
+with open('movies.pkl', 'rb') as f:
+    movies_df = pickle.load(f)
+
+with open('similarity.pkl', 'rb') as f:
+    similarity = pickle.load(f)
+
+# TMDB API Key
 API_KEY = "7f740fc310ed76697e23b3b545588c7a"
 poster_cache = {}
 
@@ -60,6 +73,8 @@ def recommend(movie):
     return recommended_movies, recommended_posters
 
 # --- UI Layout ---
+st.set_page_config(page_title="🎬 Movie Recommender", layout="wide")
+
 st.markdown("<h1 style='text-align: center;'>🎥 Movie Recommender System</h1>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center;'>Choose a movie and get 5 similar recommendations based on ML.</p>", unsafe_allow_html=True)
 st.markdown("---")
