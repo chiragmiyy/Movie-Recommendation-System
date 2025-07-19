@@ -3,18 +3,18 @@ import pickle
 import requests
 import time
 
-# Load movie data and similarity matrix
+# Page settings
+st.set_page_config(page_title="🎬 Movie Recommender", layout="wide")
+
+# Load data
 movies_df = pickle.load(open('movies.pkl', 'rb'))
 similarity = pickle.load(open('similarity.pkl', 'rb'))
 
 API_KEY = "7f740fc310ed76697e23b3b545588c7a"
-
-# Persistent cache for poster URLs (lives during app run)
 poster_cache = {}
 
 @st.cache_data(show_spinner=False)
 def fetch_poster(movie_id):
-    # Return from cache if available
     if movie_id in poster_cache:
         return poster_cache[movie_id]
 
@@ -27,24 +27,19 @@ def fetch_poster(movie_id):
             if response.status_code == 200:
                 data = response.json()
                 poster_path = data.get('poster_path', None)
-                if poster_path:
-                    poster_url = "https://image.tmdb.org/t/p/w500/" + poster_path
-                else:
-                    poster_url = "https://via.placeholder.com/500x750?text=No+Image"
+                poster_url = (
+                    "https://image.tmdb.org/t/p/w500/" + poster_path
+                    if poster_path else
+                    "https://via.placeholder.com/500x750?text=No+Image"
+                )
                 poster_cache[movie_id] = poster_url
                 return poster_url
-            else:
-                # Removed debug output for clean UI
-                pass
+            time.sleep(2 ** attempt)
         except requests.exceptions.RequestException:
-            # Removed debug output for clean UI
             time.sleep(2 ** attempt)
 
-    # After retries fail
-    error_url = "https://via.placeholder.com/500x750?text=Error"
-    poster_cache[movie_id] = error_url
-    return error_url
-
+    poster_cache[movie_id] = "https://via.placeholder.com/500x750?text=Error"
+    return poster_cache[movie_id]
 
 def recommend(movie):
     movie_index = movies_df[movies_df['title'] == movie].index[0]
@@ -56,24 +51,31 @@ def recommend(movie):
 
     for i in movie_indices:
         movie_data = movies_df.iloc[i[0]]
-        recommended_movies.append(movie_data['title'])
-        # Delay to avoid rate limiting
-        time.sleep(1)
-        recommended_posters.append(fetch_poster(movie_data['movie_id']))
+        title = movie_data.get('title', 'Unknown Title')
+        movie_id = movie_data.get('movie_id')
+        recommended_movies.append(title)
+        time.sleep(0.5)  # avoid rate limits
+        recommended_posters.append(fetch_poster(movie_id))
 
     return recommended_movies, recommended_posters
 
+# --- UI Layout ---
+st.markdown("<h1 style='text-align: center;'>🎥 Movie Recommender System</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;'>Choose a movie and get 5 similar recommendations based on ML.</p>", unsafe_allow_html=True)
+st.markdown("---")
 
-st.title('🎬 Movie Recommender System')
+selected_movie = st.selectbox("🎬 Select a movie you like:", movies_df['title'].values)
 
-movie_titles = movies_df['title'].values
-selected_movie = st.selectbox('Select a movie:', movie_titles)
+if st.button("🔍 Show Recommendations"):
+    with st.spinner("Fetching recommendations and posters..."):
+        names, posters = recommend(selected_movie)
 
-if st.button('Recommend'):
-    names, posters = recommend(selected_movie)
-    st.subheader("Recommended Movies:")
+    st.markdown("### ⭐ Top 5 Recommendations")
     cols = st.columns(5)
+
     for idx, col in enumerate(cols):
         with col:
-            st.text(names[idx])
-            st.image(posters[idx])
+            st.image(posters[idx], use_column_width=True)
+            st.caption(f"🎞️ {names[idx]}")
+else:
+    st.info("👆 Choose a movie and click **Show Recommendations** to get started.")
