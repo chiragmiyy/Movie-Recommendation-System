@@ -1,14 +1,14 @@
 # 🎬 Movie Recommendation System
 
-This is a **Content-Based Movie Recommendation System** built using Python. It recommends similar movies based on user input by analyzing features such as genres, keywords, cast, and crew. The system is inspired by the tutorial from [Krish Naik's YouTube video](https://www.youtube.com/watch?v=1xtrIEwY_zY).
+This is a **Content-Based Movie Recommendation System** built using Python. It recommends similar movies based on user input by analyzing features such as genres, keywords, cast, and crew. 
 
 ## 🚀 Features
 
-- Recommends top 5 similar movies based on content
+- Recommends top 10 similar movies based on content
 - Utilizes **TMDB 5000 Movie Dataset**
+- Fetches **movie posters** via **TMDB API**
 - Feature engineering using **text data (overview, genres, keywords, etc.)**
-- Natural Language Processing (NLP) with **TF-IDF** and **Cosine Similarity**
-- Simple and fast — no external API needed
+- Natural Language Processing (NLP) with **Text Vectorization** and **Cosine Similarity**
 
 ---
 
