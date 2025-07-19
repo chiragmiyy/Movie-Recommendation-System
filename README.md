@@ -65,10 +65,4 @@ Open movie_recommender.ipynb and run the cells step-by-step.
 
 ## 📂 Folder Structure
 
-movie-recommendation-system/
-│
-├── tmdb_5000_movies.csv
-├── tmdb_5000_credits.csv
-├── movie_recommender.ipynb
-├── README.md
-└── requirements.txt
+<pre> ``` movie-recommendation-system/ ├── tmdb_5000_movies.csv ├── tmdb_5000_credits.csv ├── movie_recommender.ipynb ├── README.md └── requirements.txt ``` </pre>
